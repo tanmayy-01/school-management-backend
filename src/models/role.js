@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // one-to-many: One role can belong to many users
       Role.hasMany(models.User, {
-        id: 'role_id',
-        as:'role'
+        foreignKey: 'role_id',
+        as: 'users'
       })
     }
   }

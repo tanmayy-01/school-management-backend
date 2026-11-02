@@ -8,12 +8,39 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // One-to-Many: A Class belongs to a single School
       Class.belongsTo(models.School, {
         foreignKey: 'school_id',
-        as: 'school'
-      })
+        as: 'school',
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      });
+
+      // One-to-Many: A Class has many Students 
+      Class.hasMany(models.Student, {
+        foreignKey: 'class_id',
+        as: 'students'
+      });
+
+      // Many-to-Many: A Class can have multiple Teachers assigned to it 
+      // Uses the junction table 'TeacherClasses'
+      Class.belongsToMany(models.Teacher, {
+        through: models.TeacherClass,
+        foreignKey: 'class_id',
+        otherKey: 'teacher_id',
+        as: 'teachers'
+      });
+
+      // Many-to-Many: A Class can have multiple Subjects assigned to it
+      // Uses the junction table 'ClassSubjects'
+      Class.belongsToMany(models.Subject, {
+        through: models.ClassSubject,
+        foreignKey: 'class_id',
+        otherKey: 'subject_id',
+        as: 'subjects'
+      });
     }
+
   }
   Class.init(
     {
